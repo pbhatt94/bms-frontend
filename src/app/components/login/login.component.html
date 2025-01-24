@@ -1,0 +1,56 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1 class="login-title">Login</h1>
+    <p class="login-description">Welcome back! Please login to continue.</p>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <!-- Username Field -->
+      <div class="input-field">
+        <p-floatLabel>
+          <input
+            pInputText
+            id="username"
+            formControlName="username"
+            type="text"
+            class="custom-input"
+            placeholder="Enter your username"
+          />
+          <label for="username">Username</label>
+        </p-floatLabel>
+      </div>
+
+      <!-- Password Field -->
+      <div class="input-field">
+        <p-floatLabel>
+          <p-password
+            formControlName="password"
+            toggleMask="true"
+            class="custom-input"
+            [feedback]="false"
+            placeholder="Enter your password"
+          />
+          <label for="password">Password</label>
+        </p-floatLabel>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="submit-button">
+        <button
+          pButton
+          pRipple
+          type="submit"
+          [loading]="loading"
+          [disabled]="!form.valid"
+          label="Login"
+          class="custom-purple-button"
+        ></button>
+      </div>
+
+      <!-- Forgot Password Link -->
+      <div class="forgot-password">
+        <a routerLink="/forgot-password" class="forgot-password-link">
+          Forgot Password?
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

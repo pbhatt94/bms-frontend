@@ -1,0 +1,11 @@
+.notifications-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+textarea.p-inputtextarea {
+  padding: 100px;
+  min-height: 100px;
+  width: 100%;
+}

@@ -1,0 +1,114 @@
+<!-- <div class="card">
+  <h2 class="mb-4">{{ isAdmin ? 'Notifications' : 'My Notifications' }}</h2>
+
+  <div *ngIf="isAdmin" class="mb-4">
+    <p-button
+      label="Send New Notification"
+      icon="pi pi-plus"
+      (onClick)="showNewNotificationDialog()"
+    ></p-button>
+  </div>
+
+  <p-table
+    [value]="notifications"
+    [paginator]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[5, 6, 7, 8, 9, 10]"
+    [loading]="loading"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} notifications"
+  > -->
+<div class="card notifications-container">
+  <h2 class="mb-4">{{ isAdmin ? 'All Notifications' : 'My Notifications' }}</h2>
+
+  <div *ngIf="isAdmin" class="mb-4">
+    <p-button
+      label="Send New Notification"
+      icon="pi pi-plus"
+      (onClick)="showNewNotificationDialog()"
+    ></p-button>
+  </div>
+
+  <p-table
+    [value]="notifications"
+    [paginator]="true"
+    [rows]="7"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[5, 6, 7]"
+    [loading]="loading"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} notifications"
+    [scrollable]="true"
+    scrollHeight="calc(100vh - 250px)"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>#</th>
+        <th>Title</th>
+        <th *ngIf="isAdmin">Receiver Name</th>
+        <th *ngIf="isAdmin">Receiver Email</th>
+        <th>Type</th>
+        <th>Timestamp</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-notification let-i="rowIndex">
+      <tr>
+        <td>{{ i + 1 }}</td>
+        <td>{{ notification.message }}</td>
+        <td *ngIf="isAdmin">{{ notification.receiver.name || 'All Users' }}</td>
+        <td *ngIf="isAdmin">
+          {{ notification.receiver.email || 'All Users' }}
+        </td>
+        <td>{{ notification.type | notificationType }}</td>
+        <td>{{ notification.timestamp | date: 'medium' }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog
+    [(visible)]="newNotificationDialogVisible"
+    header="Send New Notification"
+    [modal]="true"
+    [style]="{ width: '500px' }"
+  >
+    <form [formGroup]="notificationForm" class="flex flex-column gap-4">
+      <div class="field">
+        <label>Recipients</label>
+        <p-multiSelect
+          [options]="users"
+          formControlName="recipients"
+          optionLabel="email"
+          [filter]="true"
+          placeholder="Select recipients"
+          filterPlaceholder="Search by name or email"
+          class="w-full"
+          display="chip"
+        ></p-multiSelect>
+      </div>
+
+      <div class="field">
+        <label>Message</label>
+        <textarea
+          pInputTextarea
+          formControlName="message"
+          rows="4"
+          class="w-full"
+        ></textarea>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        (onClick)="hideNewNotificationDialog()"
+        styleClass="p-button-text"
+      ></p-button>
+      <p-button
+        label="Send"
+        icon="pi pi-send"
+        (onClick)="sendNotification()"
+        [disabled]="!notificationForm.valid"
+      ></p-button>
+    </ng-template>
+  </p-dialog>
+</div>
