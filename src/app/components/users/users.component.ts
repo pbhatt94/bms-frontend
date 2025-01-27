@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import {
   ReactiveFormsModule,
   FormBuilder,
@@ -16,8 +16,12 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { UserService } from '../../services/user-service/user.service';
-import { NewUserDetails, User, UsersResponse } from '../../models/user.models';
-import { ResponseType } from '../../models/models';
+import {
+  NewUserDetails,
+  UpdateUserDetails,
+  User,
+  UsersResponse,
+} from '../../models/user.models';
 import { CustomValidators } from '../../shared/custom-validator/custom-validators';
 
 @Component({
@@ -33,6 +37,7 @@ import { CustomValidators } from '../../shared/custom-validator/custom-validator
     ConfirmDialogModule,
     ToastModule,
     ReactiveFormsModule,
+    CurrencyPipe,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './users.component.html',
@@ -53,15 +58,50 @@ export class UsersComponent implements OnInit {
     private messageService: MessageService,
     private userService: UserService
   ) {
-    this.userForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', [Validators.required, CustomValidators.isValidPassword]],
-      age: [0, [Validators.required, Validators.min(18), Validators.max(120)]],
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      address: ['', Validators.required],
-      phoneNo: [0, [Validators.required, CustomValidators.isValidPhoneNumber]],
-    });
+    this.userForm = this.fb.group(
+      {
+        username: ['', Validators.required],
+        password: ['', [this.passwordValidation.bind(this)]],
+        confirmPassword: ['', [this.passwordValidation.bind(this)]],
+        age: [
+          0,
+          [Validators.required, Validators.min(18), Validators.max(120)],
+        ],
+        name: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        address: ['', Validators.required],
+        phoneNo: [
+          0,
+          [Validators.required, CustomValidators.isValidPhoneNumber],
+        ],
+      },
+      { validators: this.matchPasswords }
+    );
+  }
+
+  passwordValidation(control: any) {
+    if (this.dialogMode === 'add' && !control.value) {
+      return { required: true };
+    }
+    if (control.value && this.dialogMode === 'add') {
+      return CustomValidators.isValidPassword()(control);
+    }
+    return null;
+  }
+
+  matchPasswords(group: FormGroup) {
+    const password = group.get('password');
+    const confirmPassword = group.get('confirmPassword');
+
+    if (
+      password &&
+      confirmPassword &&
+      password.value !== confirmPassword.value &&
+      (password.value || confirmPassword.value)
+    ) {
+      return { passwordMismatch: true };
+    }
+    return null;
   }
 
   ngOnInit() {
@@ -132,18 +172,17 @@ export class UsersComponent implements OnInit {
 
   saveUser() {
     if (this.userForm.valid) {
-      const userDetails: NewUserDetails = this.userForm.value;
-
       if (this.dialogMode === 'add') {
+        const userDetails: NewUserDetails = { ...this.userForm.value };
         this.userService.addUser(userDetails).subscribe({
           next: (response) => {
+            setTimeout(() => this.loadUsers(), 2200);
             this.messageService.add({
               severity: 'success',
               summary: 'Success',
               detail: `User added successfully`,
             });
             this.hideDialog();
-            setTimeout(() => this.loadUsers(), 2200);
           },
           error: (err) => {
             this.messageService.add({
@@ -156,6 +195,10 @@ export class UsersComponent implements OnInit {
       }
 
       if (this.dialogMode === 'edit') {
+        const userDetails: UpdateUserDetails = { ...this.userForm.value };
+        if (userDetails?.password?.length! < 8) {
+          delete userDetails.password;
+        }
         this.userService
           .updateUser(this.selectedUser!.userId, userDetails)
           .subscribe({

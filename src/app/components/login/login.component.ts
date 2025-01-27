@@ -15,11 +15,12 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { PasswordModule } from 'primeng/password';
 
 import { AuthService } from '../../services/auth-service/auth.service';
-// import { ToastService } from '../../services/toast-service/toast.service';
 import { CustomValidators } from '../../shared/custom-validator/custom-validators';
 import { LoginResponse } from '../../models/auth.models';
 import { jwtDecode } from 'jwt-decode';
 import { Role } from '../../models/models';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-login',
@@ -29,16 +30,19 @@ import { Role } from '../../models/models';
     ReactiveFormsModule,
     FloatLabelModule,
     PasswordModule,
+    ToastModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
+  providers: [MessageService],
 })
 export class LoginComponent {
   loading: boolean = false;
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
   // private toastService = inject(ToastService);
 
@@ -74,8 +78,12 @@ export class LoginComponent {
           }
         },
         error: (error: HttpErrorResponse): void => {
-          // this.toastService.showError(error.error.message);
           console.error(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: `Invalid Credentials.`,
+          });
         },
       });
       this.loading = false;

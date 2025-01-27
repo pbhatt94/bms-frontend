@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import {
   AddUserResponse,
   NewUserDetails,
+  UpdateUserDetails,
   User,
   UserResponse,
   UsersResponse,
@@ -49,7 +50,7 @@ export class UserService {
     }>(`${BASE_URL}/user/${userId}`);
   }
 
-  updateUser(userId: string, user: NewUserDetails) {
+  updateUser(userId: string, user: UpdateUserDetails) {
     return this.httpClient.put(`${BASE_URL}/user/${userId}`, user, {
       observe: 'response',
     });

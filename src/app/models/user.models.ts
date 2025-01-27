@@ -10,8 +10,17 @@ export type User = {
   address: string;
   password: string;
   role: Role;
-  account: any;
+  account: Account;
 };
+
+export interface Account {
+  id: string;
+  accountNumber: string;
+  balance: number;
+  createdAt: Date;
+  updatedAt: Date;
+  active: boolean;
+}
 
 export type UsersResponse = {
   status: ResponseType;
@@ -32,6 +41,16 @@ export type UserResponse = {
 export type NewUserDetails = {
   username: string;
   password: string;
+  age: number;
+  name: string;
+  email: string;
+  address: string;
+  phoneNo: number;
+};
+
+export type UpdateUserDetails = {
+  username: string;
+  password?: string;
   age: number;
   name: string;
   email: string;

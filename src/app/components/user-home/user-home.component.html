@@ -1,1 +1,11 @@
-<p>user-home works!</p>
+<div class="min-h-screen flex flex-column">
+  <app-header class="w-full"></app-header>
+  <div class="flex flex-1 overflow-hidden">
+    <div class="w-18rem border-right-1 surface-border">
+      <app-user-sidebar />
+    </div>
+    <div class="flex-1 p-4 overflow-auto">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

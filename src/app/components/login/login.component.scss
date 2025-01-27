@@ -57,13 +57,23 @@
 }
 
 .custom-purple-button {
-  background-color: #6a1b9a;
+  background-color: #133f78;
   border: none;
   color: white;
   width: 100%;
   font-size: 16px;
   padding: 10px;
   border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.custom-purple-button:hover {
+  background-color: #0d2c5a;
+}
+
+.custom-purple-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 /* Forgot Password Link */
@@ -73,61 +83,11 @@
 }
 
 .forgot-password-link {
-  color: #6a1b9a;
+  color: #133f78;
   text-decoration: none;
   font-size: 14px;
 }
 
 .forgot-password-link:hover {
   text-decoration: underline;
-}
-
-/* Signup Link */
-.signup-link {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.signup-link-text {
-  color: #6a1b9a;
-  text-decoration: none;
-}
-
-.signup-link-text:hover {
-  text-decoration: underline;
-}
-
-/* Separator */
-.separator {
-  text-align: center;
-  margin: 20px 0;
-  opacity: 0.5;
-}
-
-.separator span {
-  font-size: 14px;
-  color: #6a1b9a;
-}
-
-/* Fix for overlapping labels */
-p-floatLabel {
-  position: relative;
-  display: block;
-  margin-bottom: 10px;
-}
-
-p-floatLabel label {
-  font-size: 14px;
-  font-weight: normal;
-  top: 0;
-  left: 0;
-  transition: 0.2s ease all;
-}
-
-/* When the input is focused, the label moves above */
-.custom-input:focus + p-floatLabel label,
-.custom-input:not(:empty) + p-floatLabel label {
-  top: -20px;
-  font-size: 12px;
-  color: #6a1b9a;
 }

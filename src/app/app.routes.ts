@@ -7,7 +7,53 @@ import { LoginGuard } from './shared/guards/login-guard/login.guard';
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: UserHomeComponent, canActivate: [LoginGuard] },
+  {
+    path: 'home',
+    component: UserHomeComponent,
+    canActivate: [LoginGuard],
+    children: [
+      {
+        path: 'account',
+        loadComponent: () =>
+          import('./components/account/account.component').then(
+            (m) => m.AccountComponent
+          ),
+      },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./components/notifications/notifications.component').then(
+            (m) => m.NotificationsComponent
+          ),
+      },
+      {
+        path: 'issues',
+        loadComponent: () =>
+          import('./components/issues/issues.component').then(
+            (m) => m.IssuesComponent
+          ),
+      },
+      {
+        path: 'transactions',
+        loadComponent: () =>
+          import('./components/transactions/transactions.component').then(
+            (m) => m.TransactionsComponent
+          ),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./components/profile/profile.component').then(
+            (m) => m.ProfileComponent
+          ),
+      },
+      {
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
+    ],
+  },
   {
     path: 'admin/home',
     component: AdminHomeComponent,
@@ -27,16 +73,27 @@ export const routes: Routes = [
             (m) => m.NotificationsComponent
           ),
       },
-      // {
-      //   path: 'issues',
-      //   loadComponent: () =>
-      //     import('./components/admin/issues/issues.component').then(m => m.IssuesComponent)
-      // },
-      // {
-      //   path: 'transactions',
-      //   loadComponent: () =>
-      //     import('./components/admin/transactions/transactions.component').then(m => m.TransactionsComponent)
-      // },
+      {
+        path: 'issues',
+        loadComponent: () =>
+          import('./components/issues/issues.component').then(
+            (m) => m.IssuesComponent
+          ),
+      },
+      {
+        path: 'transactions',
+        loadComponent: () =>
+          import('./components/transactions/transactions.component').then(
+            (m) => m.TransactionsComponent
+          ),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./components/profile/profile.component').then(
+            (m) => m.ProfileComponent
+          ),
+      },
       {
         path: '',
         redirectTo: 'users',

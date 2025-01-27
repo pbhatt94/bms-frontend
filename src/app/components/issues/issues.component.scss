@@ -1,0 +1,31 @@
+.user-link {
+  color: #007bff; /* Default link color */
+  text-decoration: none; /* Remove underline */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition:
+    color 0.3s ease,
+    text-decoration 0.3s ease; /* Smooth transition */
+}
+
+.user-link:hover {
+  color: #0056b3; /* Darker blue on hover */
+  text-decoration: underline; /* Underline on hover */
+}
+
+.user-link:active {
+  color: #004080; /* Even darker blue when clicked */
+}
+
+.p-table td .user-link {
+  color: #007bff;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color 0.3s ease,
+    text-decoration 0.3s ease;
+}
+
+.p-table td .user-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}

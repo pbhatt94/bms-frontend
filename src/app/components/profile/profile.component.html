@@ -1,0 +1,140 @@
+<div class="user-card">
+  <p-toast />
+  <div class="user-header">
+    <h2>Welcome, {{ user.name }}</h2>
+    <p class="user-role">{{ user.role }}</p>
+  </div>
+  <div class="user-details">
+    <p><strong>Full Name:</strong> {{ user.name }}</p>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>User ID:</strong> {{ user.userId }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Address:</strong> {{ user.address }}</p>
+    <p><strong>Age:</strong> {{ user.age }}</p>
+    <!-- <p><strong>Password:</strong> ******</p> -->
+    <button type="button" (click)="showUserDialog('edit')">Edit Profile</button>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="userDialogVisible"
+  [header]="dialogMode === 'add' ? 'Add User' : 'Edit User'"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+>
+  <form [formGroup]="userForm" class="flex flex-column gap-4 pt-4">
+    <!-- Name Field -->
+    <div class="field">
+      <label for="name">Name</label>
+      <input pInputText id="name" formControlName="name" class="w-full" />
+    </div>
+
+    <!-- Email Field -->
+    <div class="field">
+      <label for="email">Email</label>
+      <input pInputText id="email" formControlName="email" class="w-full" />
+    </div>
+
+    <!-- Username Field -->
+    <div class="field">
+      <label for="username">Username</label>
+      <input
+        pInputText
+        id="username"
+        formControlName="username"
+        class="w-full"
+      />
+    </div>
+
+    <!-- Password Field -->
+    <div class="field">
+      <label for="password">Password</label>
+      <input
+        pInputText
+        id="password"
+        formControlName="password"
+        type="password"
+        class="w-full"
+        [required]="dialogMode === 'add'"
+      />
+      <small
+        *ngIf="
+          userForm.get('password')?.errors?.['required'] && dialogMode === 'add'
+        "
+        class="p-error"
+      >
+        Password is required
+      </small>
+      <small
+        *ngIf="userForm.get('password')?.errors?.['invalidPassword']"
+        class="p-error"
+      >
+        Password must meet requirements
+      </small>
+    </div>
+
+    <!-- Confirm Password Field -->
+    <div class="field">
+      <label for="confirmPassword">Confirm Password</label>
+      <input
+        pInputText
+        id="confirmPassword"
+        formControlName="confirmPassword"
+        type="password"
+        class="w-full"
+        [required]="dialogMode === 'add'"
+      />
+      <small
+        *ngIf="
+          userForm.get('confirmPassword')?.errors?.['required'] &&
+          dialogMode === 'add'
+        "
+        class="p-error"
+      >
+        Confirm Password is required
+      </small>
+      <small *ngIf="userForm.errors?.['passwordMismatch']" class="p-error">
+        Passwords do not match
+      </small>
+    </div>
+
+    <!-- Age Field -->
+    <div class="field">
+      <label for="age">Age</label>
+      <input
+        pInputText
+        id="age"
+        formControlName="age"
+        type="number"
+        class="w-full"
+      />
+    </div>
+
+    <!-- Address Field -->
+    <div class="field">
+      <label for="address">Address</label>
+      <input pInputText id="address" formControlName="address" class="w-full" />
+    </div>
+
+    <!-- Phone Number Field -->
+    <div class="field">
+      <label for="phoneNo">Phone Number</label>
+      <input pInputText id="phoneNo" formControlName="phoneNo" class="w-full" />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancel"
+      icon="pi pi-times"
+      (onClick)="hideDialog()"
+      styleClass="p-button-text"
+    ></p-button>
+    <p-button
+      label="Save"
+      icon="pi pi-check"
+      (onClick)="saveUser()"
+      [disabled]="!userForm.valid"
+    ></p-button>
+  </ng-template>
+</p-dialog>

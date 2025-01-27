@@ -1,0 +1,157 @@
+<div class="transaction-history-container">
+  <p-toast />
+  <h2 class="mb-4">{{ isAdmin ? 'All Transactions' : 'My Transactions' }}</h2>
+
+  <div class="flex justify-content-between mb-4">
+    <p-button
+      (click)="generateDownloadLink($event)"
+      icon="pi pi-download"
+      label="Download as PDF"
+    />
+    <p-popover #op>
+      <div class="flex flex-col gap-4 w-[25rem]">
+        <div>
+          <span
+            class="font-medium text-surface-900 dark:text-surface-0 block mb-2"
+            >Follow this link to download the PDF.</span
+          >
+          <p-inputgroup>
+            <input
+              pInputText
+              [value]="downloadLink"
+              readonly
+              class="w-[25rem]"
+            />
+            <p-inputgroup-addon
+              (click)="copyToClipboard()"
+              class="clickable-icon"
+            >
+              <i class="pi pi-copy"></i>
+            </p-inputgroup-addon>
+          </p-inputgroup>
+        </div>
+      </div>
+    </p-popover>
+    <div class="flex gap-2">
+      <p-dropdown
+        [options]="typeOptions"
+        [(ngModel)]="typeFilter"
+        placeholder="Filter by Type"
+        (onChange)="applyFilters()"
+      ></p-dropdown>
+
+      <div class="flex align-items-center gap-2">
+        <p-inputNumber
+          [(ngModel)]="minAmountFilter"
+          placeholder="Min Amount"
+          [min]="0"
+        ></p-inputNumber>
+        <p-inputNumber
+          [(ngModel)]="maxAmountFilter"
+          placeholder="Max Amount"
+          [min]="0"
+        ></p-inputNumber>
+        <p-button
+          icon="pi pi-filter"
+          (onClick)="applyFilters()"
+          title="Apply Filters"
+        ></p-button>
+      </div>
+
+      <p-button
+        icon="pi pi-filter-slash"
+        (onClick)="clearFilters()"
+        title="Clear Filters"
+      ></p-button>
+    </div>
+  </div>
+
+  <p-overlay [(visible)]="overlayVisible">
+    <div class="export-options">
+      <p-button
+        label="Download PDF"
+        icon="pi pi-file-pdf"
+        (click)="downloadPDF()"
+      ></p-button>
+      <p-button
+        label="Download CSV"
+        icon="pi pi-file-excel"
+        (click)="downloadCSV()"
+      ></p-button>
+    </div>
+  </p-overlay>
+
+  <p-table
+    [value]="transactions"
+    [paginator]="true"
+    [rows]="7"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [globalFilterFields]="['accountNumber']"
+    [rowsPerPageOptions]="[5, 6, 7]"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Transaction ID</th>
+        <th>Account Number</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Timestamp</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-transaction>
+      <tr>
+        <td>{{ transaction.id | transactionpipe }}</td>
+        <td>{{ transaction.sourceAccount.accountNumber }}</td>
+        <td>{{ transaction.transactionType }}</td>
+        <td>{{ transaction.amount | currency: 'INR' }}</td>
+        <td>{{ transaction.createdAt | date: 'medium' }}</td>
+        <td>
+          <p-button
+            icon="pi pi-info"
+            (click)="showTransactionDetails(transaction)"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-dialog
+    header="Transaction Details"
+    [(visible)]="transactionDetailsVisible"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+  >
+    <ng-container *ngIf="selectedTransaction">
+      <div class="grid">
+        <div class="col-6">
+          <strong>Transaction ID:</strong>
+          {{ selectedTransaction.id | transactionpipe }}
+        </div>
+        <div class="col-6">
+          <strong>Amount:</strong>
+          {{ selectedTransaction.amount | currency: 'INR' }}
+        </div>
+        <div class="col-6">
+          <strong>Date:</strong>
+          {{ selectedTransaction.createdAt | date: 'medium' }}
+        </div>
+        <div class="col-6">
+          <strong>Type:</strong> {{ selectedTransaction.transactionType }}
+        </div>
+        <div class="col-6">
+          <strong>Account Number:</strong>
+          {{ selectedTransaction.sourceAccount.accountNumber }}
+        </div>
+        @if (selectedTransaction.targetAccount) {
+          <div class="col-6">
+            <strong>Receiver Account Number:</strong>
+            {{ selectedTransaction.targetAccount.accountNumber }}
+          </div>
+        }
+      </div>
+    </ng-container>
+  </p-dialog>
+</div>

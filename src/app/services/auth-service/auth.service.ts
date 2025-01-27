@@ -6,23 +6,36 @@ import { User, NewUserDetails, UserResponse } from '../../models/user.models';
 import { Role } from '../../models/models';
 import { BASE_URL } from '../../shared/constants/constants';
 
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, tap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  user$ = signal<User | null>(null);
+  user$ = signal<string | null>(null);
   loggedIn$ = signal<boolean>(this.hasValidToken());
   role$ = signal<Role>(Role.user);
-  forgotPasswordusername$ = signal<string>('');
+  currentUser = signal<User | null>(null);
 
   constructor(private httpClient: HttpClient) {
     if (this.loggedIn$()) {
-      // this.fetchAndStoreUserDetails();
+      this.fetchAndStoreUserDetails();
     }
+    // const token = localStorage.getItem('authToken');
+    // if (token) {
+    //   this.fetchAndStoreUserDetails();
+    //   const decodedToken: {
+    //     sub: string;
+    //     role: string;
+    //     exp: number;
+    //   } = jwtDecode(token);
+    //   console.log(decodedToken);
+    //   this.role$.set(
+    //     decodedToken.role === 'ROLE_ADMIN' ? Role.admin : Role.user
+    //   );
+    //   this.user$.set(decodedToken.sub);
+    // }
   }
 
   hasValidToken(): boolean {
@@ -44,6 +57,21 @@ export class AuthService {
       username: username,
       password: password,
     });
+  }
+
+  fetchAndStoreUserDetails() {
+    this.httpClient.get<UserResponse>(`${BASE_URL}/user/me`).subscribe({
+      next: (response: UserResponse) => {
+        this.loggedIn$.set(true);
+        this.currentUser.set(response?.data);
+        this.role$.set(response?.data?.role);
+        console.log(this.loggedIn$(), this.currentUser(), this.role$());
+      },
+    });
+  }
+
+  isAdmin() {
+    return this.role$() === Role.admin;
   }
 
   logout() {

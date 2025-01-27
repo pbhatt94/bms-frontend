@@ -24,6 +24,7 @@ import {
   NotificationsResponse,
 } from '../../models/notification.models';
 import { NotificationTypePipe } from '../../shared/pipes/notification-type.pipe';
+import { AuthService } from '../../services/auth-service/auth.service';
 
 @Component({
   selector: 'app-notifications',
@@ -45,12 +46,13 @@ import { NotificationTypePipe } from '../../shared/pipes/notification-type.pipe'
 export class NotificationsComponent implements OnInit {
   private fb = inject(FormBuilder);
   private messageService = inject(MessageService);
+  private authService = inject(AuthService);
 
   notifications: Notification[] = [];
   users: User[] = [];
   loading = false;
   newNotificationDialogVisible = false;
-  isAdmin = true;
+  isAdmin = this.authService.isAdmin();
 
   private userService = inject(UserService);
   private notificationService = inject(NotificationService);
