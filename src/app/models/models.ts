@@ -7,7 +7,7 @@ export enum Gender {
 export enum Role {
   user = 'user',
   admin = 'ADMIN',
-  customer = 'customer',
+  customer = 'CUSTOMER',
 }
 
 export type ResponseType = 'SUCCESS' | 'ERROR';

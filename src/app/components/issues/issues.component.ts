@@ -158,7 +158,7 @@ export class IssuesComponent implements OnInit {
     if (this.issueForm.valid) {
       const formValue = this.issueForm.value;
       const newIssue: NewIssueDetails = {
-        userId: formValue.assignee.id,
+        userId: this.authService.currentUser()?.userId!,
         title: formValue.title,
         description: formValue.description,
         priority: formValue.priority,

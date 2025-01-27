@@ -106,15 +106,17 @@ export class TransactionsComponent implements OnInit {
 
   getUserTransactions(params: { [key: string]: string | number }) {
     const userAccountId = this.authService.currentUser()!.account.id;
-    this.transactionService.getUserTransactions(userAccountId).subscribe({
-      next: (response: TransactionsResponse) => {
-        this.transactions = response.data;
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      },
-    });
+    this.transactionService
+      .getUserTransactions(userAccountId, params)
+      .subscribe({
+        next: (response: TransactionsResponse) => {
+          this.transactions = response.data;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        },
+      });
   }
 
   showTransactionDetails(transaction: Transaction) {

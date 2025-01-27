@@ -1,1 +1,262 @@
-<p>account works!</p>
+<div class="grid">
+  <p-toast />
+  <!-- Current Balance Card -->
+  <div class="col-12">
+    <p-card>
+      <div class="flex flex-column align-items-start">
+        <span class="text-lg font-medium mb-2">Current Balance</span>
+        <span class="text-4xl font-bold">{{
+          user()?.account?.balance | currency: 'INR'
+        }}</span>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="col-12">
+    <p-card>
+      <h3>Quick Actions</h3>
+      <div class="grid">
+        <div class="col-4">
+          <button
+            pButton
+            type="button"
+            label="Deposit"
+            icon="pi pi-plus"
+            class="p-button-outlined w-full"
+            (click)="showDepositDialog()"
+          ></button>
+        </div>
+        <div class="col-4">
+          <button
+            pButton
+            type="button"
+            label="Withdraw"
+            icon="pi pi-minus"
+            class="p-button-outlined w-full"
+            (click)="showWithdrawDialog()"
+          ></button>
+        </div>
+        <div class="col-4">
+          <button
+            pButton
+            type="button"
+            label="Transfer"
+            icon="pi pi-send"
+            class="p-button-outlined w-full"
+            (click)="showTransferDialog()"
+          ></button>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Recent Transactions -->
+  <div class="col-12">
+    <p-card>
+      <h3>Recent Transactions</h3>
+      <div class="transaction-list">
+        <div
+          *ngFor="let transaction of recentTransactions"
+          class="flex justify-content-between align-items-center p-3 border-bottom-1 border-200"
+        >
+          <div class="flex align-items-center">
+            <i
+              [class]="getTransactionIcon(transaction)"
+              style="font-size: 1.5rem; margin-right: 1rem"
+            >
+            </i>
+            <div class="flex flex-column">
+              <span class="font-medium">{{ transaction.transactionType }}</span>
+              <span class="text-sm text-500">
+                {{ transaction.createdAt | date: 'MMM d, y, h:mm a' }}
+              </span>
+            </div>
+          </div>
+          <span [class]="getAmountClass(transaction)">
+            {{ getAmountPrefix(transaction)
+            }}{{ transaction.amount | currency: 'INR' }}
+          </span>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Deposit Dialog -->
+  <p-dialog
+    header="Deposit"
+    [(visible)]="showDeposit"
+    [modal]="true"
+    [style]="{ width: '500px' }"
+  >
+    <form [formGroup]="depositForm" class="flex flex-column gap-3 p-fluid">
+      <div class="flex flex-column gap-3">
+        <div class="flex flex-column gap-2">
+          <label for="amount">Amount</label>
+          <p-inputNumber
+            id="amount"
+            formControlName="amount"
+            mode="currency"
+            currency="INR"
+          >
+          </p-inputNumber>
+          <small
+            class="p-error"
+            *ngIf="
+              depositForm.get('amount')?.invalid &&
+              depositForm.get('amount')?.touched
+            "
+          >
+            Amount is required and must be greater than 0
+          </small>
+        </div>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="hideDialog()"
+        styleClass="p-button-text"
+      ></p-button>
+      <p-button
+        label="Deposit"
+        icon="pi pi-check"
+        class="p-button-text"
+        [disabled]="!depositForm.valid"
+        (click)="deposit()"
+      ></p-button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Withdraw Dialog -->
+  <p-dialog
+    header="Withdraw"
+    [(visible)]="showWithdraw"
+    [modal]="true"
+    [style]="{ width: '450px' }"
+  >
+    <form [formGroup]="withdrawForm">
+      <div class="flex flex-column gap-3">
+        <div class="flex flex-column gap-2">
+          <label for="withdrawAmount">Amount</label>
+          <p-inputNumber
+            id="withdrawAmount"
+            formControlName="amount"
+            class="ng-invalid ng-dirty"
+            mode="currency"
+            currency="INR"
+            [max]="user()?.account?.balance"
+          >
+          </p-inputNumber>
+          <small
+            class="p-error"
+            *ngIf="
+              withdrawForm.get('amount')?.invalid &&
+              withdrawForm.get('amount')?.touched
+            "
+          >
+            <span *ngIf="withdrawForm.get('amount')?.errors?.['required']"
+              >Amount is required</span
+            >
+            <span *ngIf="withdrawForm.get('amount')?.errors?.['max']"
+              >Amount cannot exceed current balance</span
+            >
+            <span *ngIf="withdrawForm.get('amount')?.errors?.['min']"
+              >Amount must be greater than 0</span
+            >
+          </small>
+        </div>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="hideDialog()"
+        styleClass="p-button-text"
+      ></p-button>
+      <p-button
+        label="Withdraw"
+        icon="pi pi-check"
+        class="p-button-text"
+        [disabled]="!withdrawForm.valid"
+        (click)="withdraw()"
+      ></p-button>
+    </ng-template>
+  </p-dialog>
+
+  <!-- Transfer Dialog -->
+  <p-dialog
+    header="Transfer"
+    [(visible)]="showTransfer"
+    [modal]="true"
+    [style]="{ width: '450px' }"
+  >
+    <form [formGroup]="transferForm">
+      <div class="flex flex-column gap-3">
+        <div class="flex flex-column gap-2">
+          <label for="accountNumber">Recipient Account Number</label>
+          <input
+            pInputText
+            id="accountNumber"
+            formControlName="recipientAccount"
+            placeholder="Enter account number"
+          />
+          <small
+            class="p-error"
+            *ngIf="
+              transferForm.get('recipientAccount')?.invalid &&
+              transferForm.get('recipientAccount')?.touched
+            "
+          >
+            Recipient Account Number is required
+          </small>
+        </div>
+        <div class="flex flex-column gap-2">
+          <label for="transferAmount">Amount</label>
+          <p-inputNumber
+            id="transferAmount"
+            formControlName="amount"
+            mode="currency"
+            currency="INR"
+          >
+          </p-inputNumber>
+          <small
+            class="p-error"
+            *ngIf="
+              transferForm.get('amount')?.invalid &&
+              transferForm.get('amount')?.touched
+            "
+          >
+            <span *ngIf="transferForm.get('amount')?.errors?.['required']"
+              >Amount is required</span
+            >
+            <span *ngIf="transferForm.get('amount')?.errors?.['max']"
+              >Amount cannot exceed current balance</span
+            >
+            <span *ngIf="transferForm.get('amount')?.errors?.['min']"
+              >Amount must be greater than 0</span
+            >
+          </small>
+        </div>
+      </div>
+    </form>
+    <ng-template pTemplate="footer">
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        (click)="hideDialog()"
+        styleClass="p-button-text"
+      ></p-button>
+      <p-button
+        label="Transfer"
+        icon="pi pi-check"
+        class="p-button-text"
+        [disabled]="!transferForm.valid"
+        (click)="transfer()"
+      ></p-button>
+    </ng-template>
+  </p-dialog>
+</div>

@@ -93,6 +93,20 @@
     [style]="{ width: '500px' }"
   >
     <form [formGroup]="issueForm" class="flex flex-column gap-3 p-fluid">
+      <!-- Priority Field -->
+      <div class="field">
+        <label for="priority" class="block text-sm font-medium mb-2"
+          >Priority</label
+        >
+        <p-dropdown
+          id="priority"
+          formControlName="priority"
+          [options]="priorityOptions"
+          placeholder="Select priority"
+          class="w-full"
+        ></p-dropdown>
+      </div>
+
       <!-- Title Field -->
       <div class="field">
         <label for="title" class="block text-sm font-medium mb-2">Title</label>
@@ -119,20 +133,6 @@
           class="w-full"
           placeholder="Enter issue description"
         ></textarea>
-      </div>
-
-      <!-- Priority Field -->
-      <div class="field">
-        <label for="priority" class="block text-sm font-medium mb-2"
-          >Priority</label
-        >
-        <p-dropdown
-          id="priority"
-          formControlName="priority"
-          [options]="priorityOptions"
-          placeholder="Select priority"
-          class="w-full"
-        ></p-dropdown>
       </div>
     </form>
 

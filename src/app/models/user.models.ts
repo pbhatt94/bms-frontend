@@ -22,6 +22,12 @@ export interface Account {
   active: boolean;
 }
 
+export interface AccountsResponse {
+  status: ResponseType;
+  message: string;
+  data: Account;
+}
+
 export type UsersResponse = {
   status: ResponseType;
   message: string;

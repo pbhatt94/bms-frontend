@@ -12,6 +12,6 @@ export const LoginGuard: CanActivateFn = (route, state) => {
     authService.loggedIn$.set(false);
     authService.user$.set(null);
 
-    return router.navigate(['Login']).then(() => false);
+    return router.navigate(['login']).then(() => false);
   }
 };

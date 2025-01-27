@@ -52,7 +52,7 @@ export class TransactionService {
     params?: { [key: string]: string | number }
   ): Observable<DownloadURLResponse> {
     return this.httpClient.get<DownloadURLResponse>(
-      `http://localhost:8080/api/${accountId}/transactions`,
+      `http://localhost:8080/api/reports/${accountId}`,
       { params }
     );
   }

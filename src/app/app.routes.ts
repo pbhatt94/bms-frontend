@@ -3,6 +3,8 @@ import { LoginComponent } from './components/login/login.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { AdminHomeComponent } from './components/admin-home/admin-home.component';
 import { LoginGuard } from './shared/guards/login-guard/login.guard';
+import { AuthGuard } from './shared/guards/auth-guard/auth.guard';
+import { UserGuard } from './shared/guards/user-guard/user.guard';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },

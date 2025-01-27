@@ -7,11 +7,13 @@
   <div class="user-details">
     <p><strong>Full Name:</strong> {{ user.name }}</p>
     <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>User ID:</strong> {{ user.userId }}</p>
     <p><strong>Email:</strong> {{ user.email }}</p>
     <p><strong>Address:</strong> {{ user.address }}</p>
     <p><strong>Age:</strong> {{ user.age }}</p>
-    <!-- <p><strong>Password:</strong> ******</p> -->
+    <p><strong>Contact number:</strong> {{ user.phoneNo }}</p>
+    @if (user.account) {
+      <p><strong>Account number:</strong> {{ user.account.accountNumber }}</p>
+    }
     <button type="button" (click)="showUserDialog('edit')">Edit Profile</button>
   </div>
 </div>

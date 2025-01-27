@@ -98,12 +98,22 @@ export class NotificationsComponent implements OnInit {
     });
   }
 
-  getUserNotifications(): void {}
+  getUserNotifications(): void {
+    this.notificationService
+      .getUserNotifications(this.authService.currentUser()?.userId!)
+      .subscribe({
+        next: (response: NotificationsResponse) => {
+          this.notifications = response.data;
+        },
+      });
+  }
 
   sendNotification() {
     if (this.notificationForm.valid) {
       const formValue = this.notificationForm.value;
       formValue.recipients.map((user: User) => {
+        console.log(user);
+
         this.notificationService
           .sendNotification(user.userId, formValue.message)
           .subscribe({
