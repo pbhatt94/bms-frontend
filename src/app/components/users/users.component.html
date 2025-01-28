@@ -83,12 +83,18 @@
       <div class="field">
         <label for="name">Name</label>
         <input pInputText id="name" formControlName="name" class="w-full" />
+        <small class="text-red-500" *ngIf="userForm.get('name')?.touched">
+          {{ getErrorMessage('name') }}
+        </small>
       </div>
 
       <!-- Email Field -->
       <div class="field">
         <label for="email">Email</label>
         <input pInputText id="email" formControlName="email" class="w-full" />
+        <small class="text-red-500" *ngIf="userForm.get('email')?.touched">
+          {{ getErrorMessage('email') }}
+        </small>
       </div>
 
       <!-- Username Field -->
@@ -100,6 +106,9 @@
           formControlName="username"
           class="w-full"
         />
+        <small class="text-red-500" *ngIf="userForm.get('username')?.touched">
+          {{ getErrorMessage('username') }}
+        </small>
       </div>
 
       <!-- Password Field -->
@@ -118,13 +127,13 @@
             userForm.get('password')?.errors?.['required'] &&
             dialogMode === 'add'
           "
-          class="p-error"
+          class="text-red-500"
         >
           Password is required
         </small>
         <small
           *ngIf="userForm.get('password')?.errors?.['invalidPassword']"
-          class="p-error"
+          class="text-red-500"
         >
           Password must consist of a combination of uppercase, lowercase,
           numeric and special characters.
@@ -147,11 +156,14 @@
             userForm.get('confirmPassword')?.errors?.['required'] &&
             dialogMode === 'add'
           "
-          class="p-error"
+          class="text-red-500"
         >
           Confirm Password is required
         </small>
-        <small *ngIf="userForm.errors?.['passwordMismatch']" class="p-error">
+        <small
+          *ngIf="userForm.errors?.['passwordMismatch']"
+          class="text-red-500"
+        >
           Passwords do not match
         </small>
       </div>
@@ -166,6 +178,9 @@
           type="number"
           class="w-full"
         />
+        <small class="text-red-500" *ngIf="userForm.get('age')?.touched">
+          {{ getErrorMessage('age') }}
+        </small>
       </div>
 
       <!-- Address Field -->
@@ -177,6 +192,9 @@
           formControlName="address"
           class="w-full"
         />
+        <small class="text-red-500" *ngIf="userForm.get('address')?.touched">
+          {{ getErrorMessage('address') }}
+        </small>
       </div>
 
       <!-- Phone Number Field -->
@@ -188,6 +206,9 @@
           formControlName="phoneNo"
           class="w-full"
         />
+        <small class="text-red-500" *ngIf="userForm.get('phoneNo')?.touched">
+          {{ getErrorMessage('phoneNo') }}
+        </small>
       </div>
     </form>
 

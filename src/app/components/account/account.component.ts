@@ -82,6 +82,7 @@ export class AccountComponent implements OnInit {
       [
         Validators.required,
         Validators.min(1),
+        Validators.max(20000),
         (control: { value: any }) => {
           const value = control.value;
           const balance = this.user()?.account?.balance || 0;

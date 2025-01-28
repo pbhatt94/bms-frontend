@@ -277,4 +277,56 @@ export class UsersComponent implements OnInit {
       },
     });
   }
+
+  getErrorMessage(fieldName: string): string {
+    const control = this.userForm.get(fieldName);
+    if (!control || !control.errors || !control.touched) return '';
+
+    const errors = control.errors;
+
+    switch (fieldName) {
+      case 'name':
+        if (errors['required']) return 'Name is required';
+        break;
+
+      case 'email':
+        if (errors['required']) return 'Email is required';
+        if (errors['email']) return 'Please enter a valid email address';
+        break;
+
+      case 'username':
+        if (errors['required']) return 'Username is required';
+        if (errors['minlength'])
+          return 'Username must be at least 3 characters long';
+        break;
+
+      case 'password':
+        if (errors['required']) return 'Password is required';
+        if (errors['invalidPassword'])
+          return 'Password must contain uppercase, lowercase, number and special character';
+        break;
+
+      case 'confirmPassword':
+        if (errors['required']) return 'Please confirm your password';
+        if (errors['passwordMismatch']) return 'Passwords do not match';
+        break;
+
+      case 'age':
+        if (errors['required']) return 'Age is required';
+        if (errors['min']) return 'You must be at least 18 years old';
+        if (errors['max']) return 'Please enter a valid age (maximum 120)';
+        break;
+
+      case 'address':
+        if (errors['required']) return 'Address is required.';
+        break;
+
+      case 'phoneNo':
+        if (errors['required']) return 'Phone number is required';
+        if (errors['invalidPhone'])
+          return 'Please enter a valid 10-digit phone number.';
+        break;
+    }
+    return '';
+  }
 }
