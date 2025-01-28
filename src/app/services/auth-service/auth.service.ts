@@ -22,20 +22,6 @@ export class AuthService {
     if (this.loggedIn$()) {
       this.fetchAndStoreUserDetails();
     }
-    // const token = localStorage.getItem('authToken');
-    // if (token) {
-    //   this.fetchAndStoreUserDetails();
-    //   const decodedToken: {
-    //     sub: string;
-    //     role: string;
-    //     exp: number;
-    //   } = jwtDecode(token);
-    //   console.log(decodedToken);
-    //   this.role$.set(
-    //     decodedToken.role === 'ROLE_ADMIN' ? Role.admin : Role.user
-    //   );
-    //   this.user$.set(decodedToken.sub);
-    // }
   }
 
   hasValidToken(): boolean {
@@ -59,14 +45,19 @@ export class AuthService {
     });
   }
 
-  fetchAndStoreUserDetails() {
-    this.httpClient.get<UserResponse>(`${BASE_URL}/user/me`).subscribe({
-      next: (response: UserResponse) => {
-        this.loggedIn$.set(true);
-        this.currentUser.set(response?.data);
-        this.role$.set(response?.data?.role);
-        console.log(this.loggedIn$(), this.currentUser(), this.role$());
-      },
+  fetchAndStoreUserDetails(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.httpClient.get<UserResponse>(`${BASE_URL}/user/me`).subscribe({
+        next: (response: UserResponse) => {
+          this.loggedIn$.set(true);
+          this.currentUser.set(response?.data);
+          this.role$.set(response?.data?.role);
+          resolve();
+        },
+        error: (err) => {
+          reject(err);
+        },
+      });
     });
   }
 

@@ -3,3 +3,17 @@
   flex-direction: column;
   height: 100%;
 }
+
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+.status-active {
+  background-color: #e6f4ea;
+  color: #1e7e34;
+}
+.status-blocked {
+  background-color: #fdf3f3;
+  color: #d32f2f;
+}

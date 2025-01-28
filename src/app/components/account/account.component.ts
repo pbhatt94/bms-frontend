@@ -13,6 +13,7 @@ import { AuthService } from '../../services/auth-service/auth.service';
 import {
   Transaction,
   TransactionsResponse,
+  TransactionType,
 } from '../../models/transaction.models';
 import { AccountService } from '../../services/account-service/account.service';
 import { TransactionService } from '../../services/transaction-service/transaction.service';
@@ -51,11 +52,11 @@ export class AccountComponent implements OnInit {
   showWithdraw: boolean = false;
   showTransfer: boolean = false;
 
-  // transactionAmount: number = 0;
-  // recipientAccount: string = '';
-
   depositForm = this.fb.group({
-    amount: [0, [Validators.required, Validators.min(1)]],
+    amount: [
+      0,
+      [Validators.required, Validators.min(1), Validators.max(20000)],
+    ],
   });
 
   withdrawForm = this.fb.group({
@@ -64,6 +65,7 @@ export class AccountComponent implements OnInit {
       [
         Validators.required,
         Validators.min(1),
+        Validators.max(20000),
         (control: { value: any }) => {
           const value = control.value;
           const balance = this.user()?.account?.balance || 0;

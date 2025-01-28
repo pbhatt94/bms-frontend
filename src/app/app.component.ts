@@ -11,5 +11,5 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'banking-system';
+  title = 'SwissBank';
 }

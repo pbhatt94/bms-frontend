@@ -19,7 +19,7 @@ export class HeaderComponent {
   navigateToProfile() {
     if (this.authService.role$() === Role.admin)
       this.router.navigate(['/admin/home/profile']);
-    else this.router.navigate(['/home/profile']);
+    else this.router.navigate(['/dashboard/profile']);
   }
 
   logout() {

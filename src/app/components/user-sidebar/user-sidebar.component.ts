@@ -19,22 +19,22 @@ export class UserSidebarComponent implements OnInit {
       {
         label: 'Account',
         icon: 'pi pi-users',
-        routerLink: ['/home/account'],
+        routerLink: ['/dashboard/account'],
       },
       {
         label: 'Notifications',
         icon: 'pi pi-bell',
-        routerLink: ['/home/notifications'],
+        routerLink: ['/dashboard/notifications'],
       },
       {
         label: 'Issues',
         icon: 'pi pi-exclamation-circle',
-        routerLink: ['/home/issues'],
+        routerLink: ['/dashboard/issues'],
       },
       {
         label: 'Transactions',
         icon: 'pi pi-money-bill',
-        routerLink: ['/home/transactions'],
+        routerLink: ['/dashboard/transactions'],
       },
     ];
   }

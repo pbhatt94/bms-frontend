@@ -3,16 +3,16 @@ import { LoginComponent } from './components/login/login.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { AdminHomeComponent } from './components/admin-home/admin-home.component';
 import { LoginGuard } from './shared/guards/login-guard/login.guard';
-import { AuthGuard } from './shared/guards/auth-guard/auth.guard';
+import { AdminGuard } from './shared/guards/auth-guard/auth.guard';
 import { UserGuard } from './shared/guards/user-guard/user.guard';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'login', component: LoginComponent },
   {
-    path: 'home',
+    path: 'dashboard',
     component: UserHomeComponent,
-    canActivate: [LoginGuard],
+    canActivate: [LoginGuard, UserGuard],
     children: [
       {
         path: 'account',
@@ -51,7 +51,7 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'home',
+        redirectTo: 'account',
         pathMatch: 'full',
       },
     ],
@@ -59,7 +59,7 @@ export const routes: Routes = [
   {
     path: 'admin/home',
     component: AdminHomeComponent,
-    canActivate: [LoginGuard],
+    canActivate: [LoginGuard, AdminGuard],
     children: [
       {
         path: 'users',

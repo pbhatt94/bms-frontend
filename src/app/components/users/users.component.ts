@@ -5,6 +5,7 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
+  FormsModule,
 } from '@angular/forms';
 
 import { TableModule } from 'primeng/table';
@@ -23,6 +24,7 @@ import {
   UsersResponse,
 } from '../../models/user.models';
 import { CustomValidators } from '../../shared/custom-validator/custom-validators';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-users',
@@ -38,6 +40,7 @@ import { CustomValidators } from '../../shared/custom-validator/custom-validator
     ToastModule,
     ReactiveFormsModule,
     CurrencyPipe,
+    FormsModule,
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './users.component.html',
@@ -51,6 +54,8 @@ export class UsersComponent implements OnInit {
   selectedUser: User | null = null;
   first = 0;
   rows = 10;
+  searchQuery: string = '';
+  private searchSubject = new Subject<string>();
 
   constructor(
     private fb: FormBuilder,
@@ -77,6 +82,12 @@ export class UsersComponent implements OnInit {
       },
       { validators: this.matchPasswords }
     );
+
+    this.searchSubject
+      .pipe(debounceTime(500), distinctUntilChanged())
+      .subscribe((query) => {
+        this.loadUsers(0, 100, query);
+      });
   }
 
   passwordValidation(control: any) {
@@ -108,9 +119,15 @@ export class UsersComponent implements OnInit {
     this.loadUsers();
   }
 
-  loadUsers(page: number = 0, rows: number = 10) {
+  onSearch(query: string) {
+    this.searchQuery = query;
+    this.searchSubject.next(query);
+  }
+
+  loadUsers(page: number = 0, rows: number = 100, searchQuery?: string) {
     this.loading = true;
-    this.userService.getAllUsers().subscribe({
+
+    this.userService.getAllUsers(page, rows, searchQuery).subscribe({
       next: (response: UsersResponse): void => {
         if (response.status === 'SUCCESS') {
           this.users = response.data;

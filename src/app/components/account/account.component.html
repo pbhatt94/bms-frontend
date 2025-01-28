@@ -109,6 +109,9 @@
           >
             Amount is required and must be greater than 0
           </small>
+          <span *ngIf="depositForm.get('amount')?.errors?.['max']"
+            >Amount cannot exceed ₹20,000</span
+          >
         </div>
       </div>
     </form>
@@ -147,7 +150,6 @@
             class="ng-invalid ng-dirty"
             mode="currency"
             currency="INR"
-            [max]="user()?.account?.balance"
           >
           </p-inputNumber>
           <small
@@ -159,6 +161,9 @@
           >
             <span *ngIf="withdrawForm.get('amount')?.errors?.['required']"
               >Amount is required</span
+            >
+            <span *ngIf="depositForm.get('amount')?.errors?.['max']"
+              >Amount cannot exceed ₹20,000</span
             >
             <span *ngIf="withdrawForm.get('amount')?.errors?.['max']"
               >Amount cannot exceed current balance</span
@@ -235,6 +240,9 @@
             >
             <span *ngIf="transferForm.get('amount')?.errors?.['max']"
               >Amount cannot exceed current balance</span
+            >
+            <span *ngIf="depositForm.get('amount')?.errors?.['max']"
+              >Amount cannot exceed ₹20,000</span
             >
             <span *ngIf="transferForm.get('amount')?.errors?.['min']"
               >Amount must be greater than 0</span

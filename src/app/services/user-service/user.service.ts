@@ -22,10 +22,11 @@ export class UserService {
 
   getAllUsers(
     offset: number = 0,
-    limit: number = 100
+    limit: number = 100,
+    name: string = ''
   ): Observable<UsersResponse> {
     return this.httpClient.get<UsersResponse>(
-      `${BASE_URL}/users?size=${limit}&page=${offset}`
+      `${BASE_URL}/users?size=${limit}&page=${offset}&name=${name}`
     );
   }
 

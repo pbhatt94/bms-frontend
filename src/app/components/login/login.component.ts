@@ -74,7 +74,7 @@ export class LoginComponent {
           if (this.authService.role$() === Role.admin) {
             this.router.navigate(['admin/home']);
           } else {
-            this.router.navigate(['home']);
+            this.router.navigate(['dashboard']);
           }
         },
         error: (error: HttpErrorResponse): void => {

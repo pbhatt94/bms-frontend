@@ -1,11 +1,25 @@
 <div class="card users-container">
   <div class="flex justify-content-between align-items-center mb-4">
     <h2>User Management</h2>
-    <p-button
-      label="Add User"
-      icon="pi pi-plus"
-      (onClick)="showUserDialog('add')"
-    ></p-button>
+    <div class="flex align-items-center gap-3">
+      <span class="p-input-icon-left">
+        <i class="pi pi-search" style="margin-right: 8px"></i>
+        <input
+          pInputText
+          type="text"
+          [ngModel]="searchQuery"
+          (ngModelChange)="onSearch($event)"
+          placeholder="Search User"
+          class="p-inputtext-sm"
+          style="width: 200px"
+        />
+      </span>
+      <p-button
+        label="Add User"
+        icon="pi pi-plus"
+        (onClick)="showUserDialog('add')"
+      ></p-button>
+    </div>
   </div>
 
   <p-table
@@ -112,7 +126,8 @@
           *ngIf="userForm.get('password')?.errors?.['invalidPassword']"
           class="p-error"
         >
-          Password must meet requirements
+          Password must consist of a combination of uppercase, lowercase,
+          numeric and special characters.
         </small>
       </div>
 
@@ -195,19 +210,3 @@
   <p-confirmDialog></p-confirmDialog>
   <p-toast></p-toast>
 </div>
-
-<style>
-  .status-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
-  }
-  .status-active {
-    background-color: #e6f4ea;
-    color: #1e7e34;
-  }
-  .status-blocked {
-    background-color: #fdf3f3;
-    color: #d32f2f;
-  }
-</style>
