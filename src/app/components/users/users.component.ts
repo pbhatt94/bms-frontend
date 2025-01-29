@@ -205,7 +205,7 @@ export class UsersComponent implements OnInit {
             this.messageService.add({
               severity: 'error',
               summary: 'Error',
-              detail: 'There was an error adding the user.',
+              detail: 'Username and email must be unique.',
             });
           },
         });
@@ -232,7 +232,7 @@ export class UsersComponent implements OnInit {
               this.messageService.add({
                 severity: 'error',
                 summary: 'Error',
-                detail: 'There was an error updating the user.',
+                detail: 'Username and email must be unique.',
               });
             },
           });

@@ -61,7 +61,6 @@ export class LoginComponent {
 
       this.authService.login(username, password).subscribe({
         next: (response: LoginResponse): void => {
-          // this.toastService.showSuccess('Login Successful');
           localStorage.setItem('authToken', response.data['JWT Token']);
           const decodedToken: { role: string } = jwtDecode(
             response.data['JWT Token']
@@ -70,6 +69,11 @@ export class LoginComponent {
             decodedToken.role === 'ROLE_ADMIN' ? Role.admin : Role.customer
           );
           this.authService.loggedIn$.set(true);
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: `Logged in Successfully.`,
+          });
           this.loading = false;
           if (this.authService.role$() === Role.admin) {
             this.router.navigate(['admin/home']);

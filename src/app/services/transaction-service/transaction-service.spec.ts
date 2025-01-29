@@ -157,7 +157,7 @@ describe('TransactionService', () => {
     it('should fetch all user transactions without params', () => {
       const mockResponse: TransactionsResponse = transactionsResponse;
 
-      service.getAllTransactions().subscribe((response) => {
+      service.getUserTransactions('abc').subscribe((response) => {
         expect(response).toEqual(mockResponse);
       });
 
@@ -173,7 +173,7 @@ describe('TransactionService', () => {
       };
       const params = { page: '0', limit: '2' };
 
-      service.getAllTransactions(params).subscribe((response) => {
+      service.getUserTransactions('abc', params).subscribe((response) => {
         expect(response).toEqual(mockResponse);
       });
 
@@ -188,7 +188,7 @@ describe('TransactionService', () => {
       const mockResponse = transactionsResponse;
       const params = { transactionType: 'TRANSFER' };
 
-      service.getAllTransactions(params).subscribe((response) => {
+      service.getUserTransactions('abc', params).subscribe((response) => {
         expect(response).toEqual(mockResponse);
       });
 
