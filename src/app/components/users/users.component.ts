@@ -16,6 +16,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+
 import { UserService } from '../../services/user-service/user.service';
 import {
   NewUserDetails,
@@ -25,6 +26,7 @@ import {
 } from '../../models/user.models';
 import { CustomValidators } from '../../shared/custom-validator/custom-validators';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { CustomAsyncValidators } from '../../shared/custom-validator/custom-async-validators';
 
 @Component({
   selector: 'app-users',
@@ -65,7 +67,23 @@ export class UsersComponent implements OnInit {
   ) {
     this.userForm = this.fb.group(
       {
-        username: ['', Validators.required],
+        username: [
+          '',
+          {
+            validators: [Validators.required],
+            asyncValidators: [
+              CustomAsyncValidators.createExistsValidator((username) =>
+                this.userService.checkUsernameExists(
+                  username,
+                  this.dialogMode === 'edit'
+                    ? this.selectedUser?.userId
+                    : undefined
+                )
+              ),
+            ],
+            updateOn: 'blur',
+          },
+        ],
         password: ['', [this.passwordValidation.bind(this)]],
         confirmPassword: ['', [this.passwordValidation.bind(this)]],
         age: [
@@ -73,7 +91,23 @@ export class UsersComponent implements OnInit {
           [Validators.required, Validators.min(18), Validators.max(120)],
         ],
         name: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
+        email: [
+          '',
+          {
+            validators: [Validators.required, Validators.email],
+            asyncValidators: [
+              CustomAsyncValidators.createExistsValidator((email) =>
+                this.userService.checkEmailExists(
+                  email,
+                  this.dialogMode === 'edit'
+                    ? this.selectedUser?.userId
+                    : undefined
+                )
+              ),
+            ],
+            updateOn: 'blur',
+          },
+        ],
         address: ['', Validators.required],
         phoneNo: [
           0,
@@ -292,12 +326,14 @@ export class UsersComponent implements OnInit {
       case 'email':
         if (errors['required']) return 'Email is required';
         if (errors['email']) return 'Please enter a valid email address';
+        if (errors['alreadyExists']) return 'This email is already in use';
         break;
 
       case 'username':
         if (errors['required']) return 'Username is required';
         if (errors['minlength'])
           return 'Username must be at least 3 characters long';
+        if (errors['alreadyExists']) return 'This username is already taken';
         break;
 
       case 'password':

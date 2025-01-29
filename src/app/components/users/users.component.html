@@ -95,6 +95,9 @@
         <small class="text-red-500" *ngIf="userForm.get('email')?.touched">
           {{ getErrorMessage('email') }}
         </small>
+        <small class="text-blue-500" *ngIf="userForm.get('email')?.pending">
+          Checking...
+        </small>
       </div>
 
       <!-- Username Field -->
@@ -108,6 +111,9 @@
         />
         <small class="text-red-500" *ngIf="userForm.get('username')?.touched">
           {{ getErrorMessage('username') }}
+        </small>
+        <small class="text-blue-500" *ngIf="userForm.get('email')?.pending">
+          Checking...
         </small>
       </div>
 
