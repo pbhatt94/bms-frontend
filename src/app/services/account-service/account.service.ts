@@ -22,8 +22,6 @@ export class AccountService {
   }
 
   withdraw(accountId: string, amount: number): Observable<AccountsResponse> {
-    // console.log(accountId, amount);
-
     return this.httpClient.post<AccountsResponse>(
       `${BASE_URL}/account/${accountId}/withdraw`,
       {

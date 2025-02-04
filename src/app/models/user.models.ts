@@ -39,7 +39,7 @@ export type UsersResponse = {
 };
 
 export type UserResponse = {
-  status: string;
+  status: ResponseType;
   message: string;
   data: User;
 };

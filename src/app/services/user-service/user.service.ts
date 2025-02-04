@@ -11,7 +11,7 @@ import {
 } from '../../models/user.models';
 import { BASE_URL } from '../../shared/constants/constants';
 
-import { map, Observable, of, switchMap, tap } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { ResponseType } from '../../models/models';
 
 @Injectable({
